@@ -5,13 +5,18 @@ jest.mock('axios');
 
 const mockedAxios = jest.mocked(axios);
 
-describe('throttledGetDataFromApi', () => {
-  beforeAll(() => {
-    jest.useFakeTimers();
-  });
+jest.mock('lodash', () => {
+  const originalModule = jest.requireActual('lodash');
 
+  return {
+    __esModule: true,
+    ...originalModule,
+    throttle: jest.fn((fn) => fn),
+  };
+});
+
+describe('throttledGetDataFromApi', () => {
   afterAll(() => {
-    jest.useRealTimers();
     jest.resetAllMocks();
   });
 
@@ -20,7 +25,6 @@ describe('throttledGetDataFromApi', () => {
     mockedAxios.create.mockReturnValue({ get: getMock } as never);
 
     await throttledGetDataFromApi('testRelativePath');
-    await jest.runAllTimersAsync();
 
     expect(mockedAxios.create).toBeCalledTimes(1);
     expect(mockedAxios.create).toBeCalledWith({
@@ -34,7 +38,6 @@ describe('throttledGetDataFromApi', () => {
     mockedAxios.create.mockReturnValue({ get: getMock } as never);
 
     await throttledGetDataFromApi(testRelativePath);
-    await jest.runAllTimersAsync();
 
     expect(getMock).toBeCalledTimes(1);
     expect(getMock).toBeCalledWith(testRelativePath);
@@ -46,7 +49,6 @@ describe('throttledGetDataFromApi', () => {
     mockedAxios.create.mockReturnValue({ get: getMock } as never);
 
     const responseData = await throttledGetDataFromApi('testRelativePath');
-    await jest.runAllTimersAsync();
     expect(responseData).toBe(testData);
   });
 });
