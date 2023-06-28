@@ -16,6 +16,7 @@ describe('BankAccount', () => {
   });
 
   test('should create account with initial balance', () => {
+    expect(account).toBeInstanceOf(BankAccount);
     expect(account.getBalance()).toBe(initialBalance);
   });
 
