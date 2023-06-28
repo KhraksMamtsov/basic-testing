@@ -1,9 +1,5 @@
 // Uncomment the code below and write your tests
-import {
-  readFileAsynchronously,
-  // doStuffByTimeout,
-  // doStuffByInterval,
-} from '.';
+import { readFileAsynchronously, doStuffByTimeout, doStuffByInterval } from '.';
 
 import { existsSync } from 'fs';
 import { readFile } from 'fs/promises';
@@ -19,11 +15,28 @@ describe('doStuffByTimeout', () => {
   });
 
   test('should set timeout with provided callback and timeout', () => {
-    // Write your test here
+    const testCallback = () => void 0;
+    const testTimeout = 20000;
+
+    const setTimeoutMock = jest.spyOn(global, 'setTimeout');
+
+    doStuffByTimeout(testCallback, testTimeout);
+
+    expect(setTimeoutMock).toHaveBeenCalledTimes(1);
+    expect(setTimeoutMock).toBeCalledWith(testCallback, testTimeout);
   });
 
   test('should call callback only after timeout', () => {
-    // Write your test here
+    const testCallback = jest.fn();
+    const testTimeout = 20000;
+
+    doStuffByTimeout(testCallback, testTimeout);
+
+    expect(testCallback).not.toBeCalled();
+
+    jest.runAllTimers();
+
+    expect(testCallback).toHaveBeenCalledTimes(1);
   });
 });
 
@@ -37,11 +50,29 @@ describe('doStuffByInterval', () => {
   });
 
   test('should set interval with provided callback and timeout', () => {
-    // Write your test here
+    const testCallback = () => void 0;
+    const testInterval = 20000;
+
+    const setTimeoutMock = jest.spyOn(global, 'setInterval');
+
+    doStuffByInterval(testCallback, testInterval);
+
+    expect(setTimeoutMock).toHaveBeenCalledTimes(1);
+    expect(setTimeoutMock).toBeCalledWith(testCallback, testInterval);
   });
 
   test('should call callback multiple times after multiple intervals', () => {
-    // Write your test here
+    const testCallback = jest.fn();
+    const testInterval = 20000;
+
+    doStuffByInterval(testCallback, testInterval);
+
+    expect(testCallback).not.toBeCalled();
+
+    jest.runOnlyPendingTimers();
+    expect(testCallback).toHaveBeenCalledTimes(1);
+    jest.runOnlyPendingTimers();
+    expect(testCallback).toHaveBeenCalledTimes(2);
   });
 });
 
@@ -66,6 +97,7 @@ describe('readFileAsynchronously', () => {
 
     await readFileAsynchronously(testPathToFile);
 
+    expect(joinMock).toHaveBeenCalledTimes(1);
     expect(joinMock).toBeCalledWith(expect.any(String), testPathToFile);
   });
 
