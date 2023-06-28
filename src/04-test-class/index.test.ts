@@ -15,6 +15,10 @@ describe('BankAccount', () => {
     account = getBankAccount(initialBalance);
   });
 
+  afterAll(() => {
+    jest.resetAllMocks();
+  });
+
   test('should create account with initial balance', () => {
     expect(account).toBeInstanceOf(BankAccount);
     expect(account.getBalance()).toBe(initialBalance);
