@@ -17,7 +17,7 @@ describe('throttledGetDataFromApi', () => {
 
   test('should create instance with provided base url', async () => {
     const getMock = jest.fn(async () => ({}));
-    mockedAxios.create.mockReturnValue({ get: getMock } as any);
+    mockedAxios.create.mockReturnValue({ get: getMock } as never);
 
     await throttledGetDataFromApi('testRelativePath');
     await jest.runAllTimersAsync();
@@ -31,7 +31,7 @@ describe('throttledGetDataFromApi', () => {
   test('should perform request to correct provided url', async () => {
     const testRelativePath = 'testRelativePath';
     const getMock = jest.fn(async () => ({}));
-    mockedAxios.create.mockReturnValue({ get: getMock } as any);
+    mockedAxios.create.mockReturnValue({ get: getMock } as never);
 
     await throttledGetDataFromApi(testRelativePath);
     await jest.runAllTimersAsync();
@@ -43,7 +43,7 @@ describe('throttledGetDataFromApi', () => {
   test('should return response data', async () => {
     const testData = 'testData';
     const getMock = jest.fn(async () => ({ data: testData }));
-    mockedAxios.create.mockReturnValue({ get: getMock } as any);
+    mockedAxios.create.mockReturnValue({ get: getMock } as never);
 
     const responseData = await throttledGetDataFromApi('testRelativePath');
     await jest.runAllTimersAsync();
